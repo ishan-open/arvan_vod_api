@@ -1,52 +1,122 @@
+from .resources import (
+    Audio, AudioTrack,
+    Channel, Domain,
+    File, GeneralReport,
+    Profile, Subtitle,
+    Video, Watermark,
+)
+
+
 class VodApi:
     def __init__(self, api_key: str):
         self.api_key = api_key
 
     @property
-    def audio(self):
-        print("Audio!")
+    def audio(self) -> Audio:
+        """
+        Audio
+
+        Returns
+        -------
+        Audio
+        """
+        return Audio(self.api_key)
 
     @property
-    def audio_track(self):
-        """Audio Track"""
-        print("Audio Track!")
+    def audio_track(self) -> AudioTrack:
+        """
+        Audio Track
+
+        Returns
+        -------
+        AduioTrack
+        """
+        return AudioTrack(self.api_key)
 
     @property
-    def channel(self):
-        """Channel"""
-        print("Channel!")
+    def channel(self) -> Channel:
+        """
+        Channel
+
+        Returns
+        -------
+        Channel
+        """
+        return Channel(self.api_key)
 
     @property
-    def file(self):
-        """File"""
-        print("File!")
+    def file(self) -> File:
+        """
+        File
+
+        Returns
+        -------
+        File
+        """
+        return File(self.api_key)
 
     @property
-    def profile(self):
-        """Profile"""
-        print("Profile!")
+    def profile(self) -> Profile:
+        """
+        Profile
+
+        Returns
+        -------
+        Profile
+        """
+        return Profile(self.api_key)
 
     @property
-    def general_report(self):
-        """General Report"""
-        print("General Report!")
+    def general_report(self) -> GeneralReport:
+        """
+        General Report
+
+        Returns
+        -------
+        GeneralReport
+        """
+        return GeneralReport(self.api_key)
 
     @property
-    def subtitle(self):
-        """Subtitle"""
-        print("Subtitle!")
+    def subtitle(self) -> Subtitle:
+        """
+        Subtitle
+
+        Returns
+        -------
+        Subtitle
+        """
+        return Subtitle(self.api_key)
 
     @property
-    def Domain(self):
-        """Domain"""
-        print("Domain!")
+    def domain(self) -> Domain:
+        """
+        Domain
+
+        Returns
+        -------
+        Domain
+        """
+        return Domain(self.api_key)
 
     @property
-    def video(self):
-        """Video"""
-        print("Video!")
+    def video(self) -> Video:
+        """
+        Video
+
+        Returns
+        -------
+        Video
+        """
+        return Video(self.api_key)
 
     @property
-    def watermark(self):
-        """Watermark"""
-        print("Watermark")
+    def watermark(self) -> Watermark:
+        """
+        Watermark
+
+        Returns
+        -------
+        Watermark
+        """
+        return Watermark(self.api_key)
