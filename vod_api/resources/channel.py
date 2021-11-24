@@ -3,6 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetChannelsReponse, PostChannelResponse,
+    DeleteChannelResponse,
 )
 
 
@@ -33,6 +34,13 @@ class Channel(Base):
         Returns
         -------
         GetChannelsReponse
+
+        Examples
+        --------
+        >>> x = api.channel.get_channels()
+        >>> channels = x.data   # an iterable list with channels object data
+        >>> for channel in channels: # can access to every channel's data
+        >>>     print(channel.title)
         """
 
         params = {
@@ -89,6 +97,13 @@ class Channel(Base):
         Returns
         -------
         PostChannelResponse
+
+        Examples
+        --------
+        >>> x = api.channel.post_channel("testing")
+        >>> x.data      # an object with created channel data
+        >>> x.data.id   # can access to created channel data
+        >>> x.data.title
         """
 
         parameters = {
@@ -104,6 +119,29 @@ class Channel(Base):
 
         return PostChannelResponse(requests.post(
             self._get_channels_url(),json=parameters,headers=self.auth
+            ))
+
+    def delete_channel(self, channel: str):
+        """
+        Remove the specified channel. 
+
+        Parameters
+        ----------
+        channel : str
+            The Id of channel
+
+        Returns
+        -------
+        DeleteChannelResponse
+
+        Examples
+        --------
+        >>> x = api.channel.delete_channel("some channel id")
+        >>> print(x.message) # will print ' channel deleted successfully '
+        """
+
+        return DeleteChannelResponse(requests.delete(
+                self._get_channel_url(channel), headers=self.auth
             ))
 
     def _get_channels_url(self):

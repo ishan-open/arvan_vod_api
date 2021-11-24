@@ -8,7 +8,7 @@ from ..core import (
     ChannelPostDataCore,
 )
 from ..errors import (
-    InvalidParameterError,
+    InvalidParameterError, NotFoundError,
 )
 
 
@@ -39,6 +39,17 @@ class PostChannelResponse(BaseResponse):
     @property
     def data(self) -> ChannelPostDataCore:
         return ChannelPostDataCore(self.as_dict["data"])
+
+    @property
+    def message(self) -> str:
+        return self.as_dict["message"]
+
+
+class DeleteChannelResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(DeleteChannelResponse, self).__init__(response)
+        if self.status_code == HTTPStatus.NOT_FOUND:
+            raise NotFoundError(self.message)
 
     @property
     def message(self) -> str:

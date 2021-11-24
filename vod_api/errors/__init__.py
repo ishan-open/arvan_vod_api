@@ -1,4 +1,4 @@
 from .exceptions import (
     InvalidKeyError, ArvanInternalError,
-    InvalidParameterError,
+    InvalidParameterError, NotFoundError,
 )
