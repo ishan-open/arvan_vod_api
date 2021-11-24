@@ -12,6 +12,7 @@ class BaseResponse:
         elif response.status_code not in (
                 HTTPStatus.OK, HTTPStatus.CREATED,
                 HTTPStatus.NOT_FOUND, HTTPStatus.NO_CONTENT,
+                HTTPStatus.UNPROCESSABLE_ENTITY,
             ):
             raise ArvanInternalError
 

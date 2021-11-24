@@ -1,1 +1,3 @@
-from .channel_res import GetChannelsReponse
+from .channel_res import (
+    GetChannelsReponse, PostChannelResponse,
+)
