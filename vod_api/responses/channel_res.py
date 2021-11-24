@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from .base_res import BaseResponse
 from ..core import (
-    ChannelDataCore, ChannelMetaCore,
+    ChannelDataCore, MetaCore,
 )
 from ..errors import (
     InvalidParameterError, NotFoundError,
@@ -35,8 +35,8 @@ class GetChannelsReponse(BaseResponse):
         return self.as_dict["links"]
 
     @property
-    def meta(self) -> ChannelMetaCore:
-        return ChannelMetaCore(self.as_dict["meta"])
+    def meta(self) -> MetaCore:
+        return MetaCore(self.as_dict["meta"])
 
 
 class PostChannelResponse(BaseResponse):

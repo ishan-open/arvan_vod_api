@@ -12,7 +12,7 @@ class ChannelDataCore:
         self.campaign_id = response['campaign_id']
 
 
-class ChannelMetaCore:
+class MetaCore:
     def __init__(self, response: dict):
         self.response = response
         self.current_page = response['current_page']

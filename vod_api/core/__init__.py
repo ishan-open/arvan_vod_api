@@ -1,3 +1,3 @@
 from .channels import (
-    ChannelDataCore, ChannelMetaCore,
+    ChannelDataCore, MetaCore,
 )
