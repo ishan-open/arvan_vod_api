@@ -5,11 +5,21 @@ from http import HTTPStatus
 from .base_res import BaseResponse
 from ..core import (
     ChannelDataCore, ChannelMetaCore,
-    ChannelPostDataCore,
 )
 from ..errors import (
     InvalidParameterError, NotFoundError,
 )
+
+
+class GetChannelReponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(GetChannelReponse, self).__init__(response)
+        if self.status_code == HTTPStatus.NOT_FOUND:
+            raise NotFoundError(self.as_dict["message"])
+
+    @property
+    def data(self) -> ChannelDataCore:
+        return ChannelDataCore(self.as_dict["data"])
 
 
 class GetChannelsReponse(BaseResponse):
@@ -36,9 +46,12 @@ class PostChannelResponse(BaseResponse):
             if self.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
                 raise InvalidParameterError(self.as_dict["errors"])
 
+            elif self.status_code == HTTPStatus.NOT_FOUND:
+                raise NotFoundError(self.message)
+
     @property
-    def data(self) -> ChannelPostDataCore:
-        return ChannelPostDataCore(self.as_dict["data"])
+    def data(self) -> ChannelDataCore:
+        return ChannelDataCore(self.as_dict["data"])
 
     @property
     def message(self) -> str:
