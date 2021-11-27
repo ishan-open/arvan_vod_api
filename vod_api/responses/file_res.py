@@ -2,7 +2,7 @@ from http import HTTPStatus
 from requests import Response
 
 from .base_res import BaseResponse
-from ..errors import InvalidParameterError
+from ..errors import InvalidParameterError, NotFoundError
 
 
 class GetFilesResponse(BaseResponse):
@@ -36,3 +36,19 @@ class PostFileResponse(BaseResponse):
     @property
     def file_location(self) -> str:
         return self.created_file_location
+
+
+class HeadFileResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(HeadFileResponse, self).__init__(response)
+        if self.status_code != HTTPStatus.OK:
+            if self.status_code == HTTPStatus.NOT_FOUND:
+                    raise NotFoundError("ChannelId or FileId is Invalid!")
+
+    @property
+    def upload_length(self) -> str:
+        return self.response.headers["Upload-Length"]
+
+    @property
+    def upload_offset(self) -> str:
+        return self.response.headers["Upload-Offset"]

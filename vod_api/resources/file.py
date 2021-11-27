@@ -3,7 +3,10 @@ import base64
 import mimetypes
 
 from .base import Base
-from ..responses import PostFileResponse
+from ..responses import (
+    PostFileResponse, HeadFileResponse,
+    GetFilesResponse,
+)
 
 
 class File(Base):
@@ -96,10 +99,38 @@ class File(Base):
                 self._get_files_url(channel), headers=parameters
             ))
 
+    def get_upload_offset(self, channel: str, file: str):
+        """
+        Get upload offset. See https://tus.io/ for more detail. 
+
+        Parameters
+        ----------
+        channel : str
+            The Id of channel
+
+        file : str
+            The Id of file
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        None
+        """
+        return HeadFileResponse(requests.head(
+                self._get_channel_file_url(channel, file), headers=self.auth
+            ))
+
     def _get_files_url(self, channel_id: str):
         # "https://napi.arvancloud.com/vod/2.0/channels/{channel}/files"
         return f"{self.base_url}/channels/{channel_id}/files"
     
+    def _get_channel_file_url(self, channel_id: str, file_id: str):
+        # "https://napi.arvancloud.com/vod/2.0/channels/{channel}/files"
+        return f"{self.base_url}/channels/{channel_id}/files/{file_id}"
+
     def _get_file_url(self, file_id: str):
         # https://napi.arvancloud.com/vod/2.0/files/{file}
         return f"{self.base_url}/files/{file_id}"
