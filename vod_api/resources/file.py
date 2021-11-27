@@ -3,6 +3,7 @@ import base64
 import mimetypes
 
 from .base import Base
+from ..responses import PostFileResponse
 
 
 class File(Base):
@@ -48,7 +49,7 @@ class File(Base):
             upload_length: int,
             upload_metadata: str,
             tus_resumable: str = "1.0.0"
-        ):
+        ) -> PostFileResponse:
         """
         Request a new upload file.
 
@@ -57,10 +58,10 @@ class File(Base):
         channel : str
             The Id of channel
 
-        upload-length : int
+        upload_length : int
             To indicate the size of entire upload in bytes
 
-        upload-metadata: str
+        upload_metadata: str
             To add additional metadata to the upload creation request.
             * MUST contain 'filename' and 'filetype'.
             From all available fields only these two fields will be used.
@@ -69,12 +70,31 @@ class File(Base):
             * The key MUST NOT contain spaces and commas and MUST NOT be empty.
             * The key SHOULD be ASCII encoded and the value MUST be Base64 encoded.
 
-        tus-resumable : str
+        tus_resumable : str
              Default: '1.0.0', version of tus.io
 
-        
+        Returns
+        -------
+        PostFileResponse
+
+        Examples
+        --------
+        >>> length = 123256
+        >>> metadata = "filename ZGphbmdvLm1wNA==,filetype dmlkZW8vbXA0"
+        >>> x = api.file.post_file(channel_id, length, metadata)
+        >>> x.file_id
+        >>> x.file_location
         """
-        pass
+        parameters = {
+            "tus-resumable": tus_resumable,
+            "upload-length": str(upload_length),
+            "upload-metadata": upload_metadata,
+        }
+        parameters.update(self.auth)
+
+        return PostFileResponse(requests.post(
+                self._get_files_url(channel), headers=parameters
+            ))
 
     def _get_files_url(self, channel_id: str):
         # "https://napi.arvancloud.com/vod/2.0/channels/{channel}/files"
