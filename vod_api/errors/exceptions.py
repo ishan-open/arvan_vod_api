@@ -29,3 +29,8 @@ class NotFoundError(Error):
 
     def __str__(self) -> str:
         return self.message
+
+
+class InvalidOffsetError:
+    def __str__(self) -> str:
+        return "Invalid offset or offset is bigger than file size"

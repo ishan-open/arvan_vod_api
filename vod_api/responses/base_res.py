@@ -10,9 +10,12 @@ class BaseResponse:
             raise InvalidKeyError
 
         elif response.status_code not in (
-                HTTPStatus.OK, HTTPStatus.CREATED,
-                HTTPStatus.NOT_FOUND, HTTPStatus.NO_CONTENT,
+                HTTPStatus.OK,
+                HTTPStatus.CREATED,
+                HTTPStatus.NOT_FOUND,
+                HTTPStatus.NO_CONTENT,
                 HTTPStatus.UNPROCESSABLE_ENTITY,
+                HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE,
             ):
             raise ArvanInternalError
 

@@ -5,7 +5,8 @@ import mimetypes
 from .base import Base
 from ..responses import (
     PostFileResponse, HeadFileResponse,
-    GetFilesResponse,
+    GetFilesResponse, PatchFileResponse,
+    GetFileResponse, DeleteFileResponse
 )
 
 
@@ -13,7 +14,7 @@ class File(Base):
     def __init__(self, api_key: str):
         super(File, self).__init__(api_key)
 
-    def get_files(self, channel: str, filter: str = None):
+    def get_files(self, channel: str, filter: str = None) -> GetFilesResponse:
         """
         Return all draft files of channel. 
 
@@ -27,24 +28,46 @@ class File(Base):
 
         Returns
         -------
+        GetFilesResponse
 
         Examples
         --------
-
+        >>> files = api.file.get_files("some channel id").data # list of files
+        >>> for file in files: # it's an iterable list with every file's data
+        >>>     print(file.id) # can access to file's data
         """
         parameters = {
             "filter": filter
         }
 
-        res = requests.get(
-            self._get_files_url(channel), params=parameters, headers=self.auth
-            )
+        return GetFilesResponse(requests.get(
+                self._get_files_url(channel),
+                params=parameters,
+                headers=self.auth,
+            ))
 
-        print(res.status_code)
-        try:
-            print(res.json())
-        except:
-            print(res.content)
+    def get_file(self, file: str) -> GetFileResponse:
+        """
+        Return the specified file.
+
+        Parameters
+        ----------
+        file : str
+            The Id of file
+
+        Returns
+        -------
+        GetFileResponse
+
+        Example
+        -------
+        >>> file = api.file.get_file("some file id").data
+        >>> file.id
+        >>> file.filename
+        """
+        return GetFileResponse(requests.get(
+                self._get_file_url(file), headers=self.auth
+            ))
 
     def post_file(
             self,
@@ -99,7 +122,7 @@ class File(Base):
                 self._get_files_url(channel), headers=parameters
             ))
 
-    def get_upload_offset(self, channel: str, file: str):
+    def head_file(self, channel: str, file: str) -> HeadFileResponse:
         """
         Get upload offset. See https://tus.io/ for more detail. 
 
@@ -113,14 +136,97 @@ class File(Base):
 
         Returns
         -------
-        None
+        HeadFileResponse
 
-        Examples
-        --------
-        None
+        Example
+        -------
+        >>> x = api.file.get_upload_offset(channel_id, file_id)
+        >>> x.upload_offset
+        >>> x.upload_length
         """
         return HeadFileResponse(requests.head(
                 self._get_channel_file_url(channel, file), headers=self.auth
+            ))
+
+    def patch_file(
+        self,
+        channel: str,
+        file: str,
+        data: bytes,
+        upload_offset: int = 0,
+        content_type: str = "application/offset+octet-stream",
+        tus_resumable: str = "1.0.0"
+        ) -> PatchFileResponse:
+        """
+        Upload and apply bytes to a file. See https://tus.io/ for more detail. 
+
+        Parameters
+        ----------
+        channel : str
+            The Id of channel
+
+        file : str
+            The Id of file
+
+        data : bytes
+            chunked file as bytes
+
+        upload_offset : int
+            request and response header indicates a byte offset within a resource.
+            * For uploading entire file in one request, set this to '0'
+
+        content_type : str
+            Request content type
+
+        tus_resumable : str
+            Request content type
+
+        Returns
+        -------
+        PatchFileResponse
+
+        Example
+        -------
+        >>> with open(file_name, "rb") as f:
+        >>>     data = f.read(1024*1024)
+        >>>     while data:
+        >>>         x = api.file.upload_chunk(channel_id, file_id, data)
+        >>>         print(x.status_code, x.upload_offset)
+        >>>         data = f.read(1024*1024)
+        """
+        parameters = {
+            "tus-resumable": tus_resumable,
+            "upload-offset": str(upload_offset),
+            "Content-Type": content_type,
+
+        }
+        parameters.update(self.auth)
+
+        return PatchFileResponse(requests.patch(
+                self._get_channel_file_url(channel, file),
+                headers=parameters,
+                data=data
+            ))
+
+    def delete_file(self, file: str) -> DeleteFileResponse:
+        """
+        Remove the specified file. 
+
+        Parameters
+        ----------
+        file : str
+            The Id of file
+
+        Returns
+        -------
+        DeleteFileResponse
+
+        Example
+        -------
+        >>> api.file.delete_file("some file id)
+        """
+        return DeleteFileResponse(requests.delete(
+                self._get_file_url(file), headers=self.auth
             ))
 
     def _get_files_url(self, channel_id: str):

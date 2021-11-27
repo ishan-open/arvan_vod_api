@@ -4,5 +4,6 @@ from .channel_res import (
 )
 from .file_res import (
     PostFileResponse, GetFilesResponse,
-    HeadFileResponse,
+    HeadFileResponse, PatchFileResponse,
+    GetFileResponse, DeleteFileResponse,
 )

@@ -1,30 +1,52 @@
 from http import HTTPStatus
 from requests import Response
+from typing import List
 
 from .base_res import BaseResponse
-from ..errors import InvalidParameterError, NotFoundError
+from ..errors import (
+    InvalidParameterError, NotFoundError,
+    InvalidOffsetError,
+)
+from ..core import (
+    FileCore, MetaCore
+)
 
 
 class GetFilesResponse(BaseResponse):
     def __init__(self, response: Response):
         super(GetFilesResponse, self).__init__(response)
-        
-    def data(self):
-        return self.as_dict["data"]
 
-    def links(self):
+    @property
+    def data(self) -> List[FileCore]:
+        return [FileCore(file) for file in self.as_dict["data"]]
+
+    @property
+    def links(self) -> dict:
         return self.as_dict["links"]
 
-    def meta(self):
+    @property
+    def meta(self) -> MetaCore:
         return self.as_dict["meta"]
+
+
+class GetFileResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(GetFileResponse, self).__init__(response)
+        if self.status_code != HTTPStatus.OK:
+            if self.status_code == HTTPStatus.NOT_FOUND:
+                raise NotFoundError("Invalid file id")
+
+    @property
+    def data(self) -> FileCore:
+        return FileCore(self.as_dict["data"])
 
 
 class PostFileResponse(BaseResponse):
     def __init__(self, response: Response):
         super(PostFileResponse, self).__init__(response)
-        if self.status_code != HTTPStatus.OK:
+        if self.status_code != HTTPStatus.CREATED:
             if self.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
-                    raise InvalidParameterError(self.as_dict["errors"])
+                raise InvalidParameterError(self.as_dict["errors"])
         
         self.created_file_location = self.response.headers["location"]
         self.created_file_id = self.file_location.rsplit("/")[-1]
@@ -43,7 +65,7 @@ class HeadFileResponse(BaseResponse):
         super(HeadFileResponse, self).__init__(response)
         if self.status_code != HTTPStatus.OK:
             if self.status_code == HTTPStatus.NOT_FOUND:
-                    raise NotFoundError("ChannelId or FileId is Invalid!")
+                raise NotFoundError("ChannelId or FileId is Invalid!")
 
     @property
     def upload_length(self) -> str:
@@ -52,3 +74,29 @@ class HeadFileResponse(BaseResponse):
     @property
     def upload_offset(self) -> str:
         return self.response.headers["Upload-Offset"]
+
+
+class PatchFileResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(PatchFileResponse, self).__init__(response)
+        if self.status_code != HTTPStatus.NO_CONTENT:
+            if self.status_code == HTTPStatus.REQUESTED_RANGE_NOT_SATISFIABLE:
+                raise InvalidOffsetError
+            elif self.status_code == HTTPStatus.NOT_FOUND:
+                raise NotFoundError("FileId is invalid!")
+
+    @property
+    def upload_offset(self) -> str:
+        return self.response.headers["Upload-Offset"]
+
+
+class DeleteFileResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(DeleteFileResponse, self).__init__(response)
+        if self.status_code != HTTPStatus.OK:
+            if self.status_code == HTTPStatus.NOT_FOUND:
+                raise NotFoundError(self.message)
+
+    @property
+    def message(self):
+        return self.as_dict["message"]
