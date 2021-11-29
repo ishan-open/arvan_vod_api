@@ -46,7 +46,7 @@ class GetVideoResponse(BaseResponse):
 class PostVideoResponse(BaseResponse):
     def __init__(self, response: Response):
         super(PostVideoResponse, self).__init__(response)
-        if self.status_code != HTTPStatus.OK:
+        if self.status_code != HTTPStatus.CREATED:
             if self.status_code == HTTPStatus.NOT_FOUND:
                 raise NotFoundError(self.as_dict["message"])
             elif self.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:

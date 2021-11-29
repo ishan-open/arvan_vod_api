@@ -1,3 +1,5 @@
+import requests
+
 from .base import Base
 
 
@@ -11,11 +13,73 @@ class Audio(Base):
         """Return the specified audio."""
         pass
 
-    def post_audio(self):
-        """Store a newly created audio."""
-        pass
+    def post_audio(
+            self,
+            channel: str,
+            title: str,
+            description: str = None,
+            audio_url : str = None,
+            file_id : str = None,
+            convert_mode: str = "auto",
+            parallel_convert: bool = False,
+            convert_info: list = None
+        ):
+        """
+        Store a newly created audio.
 
-    def update_audio(self):
+        Parameters
+        ----------
+        channel : str
+            The Id of channel
+
+        title : str
+            Title of the audio
+
+        description : str
+            Description of the audio
+
+        audio_url : str
+            Public URL of audio
+
+        file_id : str
+            ID of the audio file
+
+        convert_mode : str
+            Enum: "auto" "manual" "profile" 
+            Convert mode
+
+        parallel_convert : bool
+            Default: false
+            Set this convert parallel when any audio(s) is converting.
+            Parallel limit is 3
+
+        convert_info : list
+            Array of convert details
+
+        Returns
+        -------
+
+        Example
+        -------
+
+        """
+        parameters = {
+            "title": title,
+            "description": description,
+            "audio_url": audio_url,
+            "file_id": file_id,
+            "convert_mode": convert_mode,
+            "parallel_convert": parallel_convert,
+            "convert_info": convert_info
+        }
+        res = requests.post(self._get_audios_url(channel), json=parameters, headers=self.auth)
+        print(res.status_code)
+        try:
+            print(res.json())
+        except:
+            print(res.content)
+
+    def patch_audio(self):
         """Update the specified audio. """
         pass
 
@@ -55,4 +119,17 @@ class Audio(Base):
         secure_expire_time : int
             The Unix Timestamp for expire secure links. * If channel is secure default is 24 hours later from now
         """
-        pass
+        res = requests.get(self._get_audios_url(channel), headers=self.auth)
+        print(res.status_code)
+        try:
+            print(res.json())
+        except:
+            print(res.content)
+    
+    def _get_audios_url(self, channel_id: str) -> str:
+        # https://napi.arvancloud.com/vod/2.0/channels/{channel}/audios
+        return f"{self.base_url}/channels/{channel_id}/audios"
+
+    def _get_audio_url(self, audio_id) -> str:
+        # https://napi.arvancloud.com/vod/2.0/audios/{audio}
+        return f"{self.base_url}/audios/{audio_id}"
