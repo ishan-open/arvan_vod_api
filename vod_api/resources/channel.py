@@ -169,7 +169,7 @@ class Channel(Base):
                 self._get_channel_url(channel), headers=self.auth
             ))
 
-    def update_channel(
+    def patch_channel(
             self,
             channel: str,
             title: str = None,
@@ -232,7 +232,7 @@ class Channel(Base):
             "present_type": present_type,
             "campaign_id": campaign_id
         }
-        parameters = {key: value for key, value in parameters.items() if value}
+        parameters = {key: value for key, value in parameters.items() if value is not None}
 
         return PostChannelResponse(requests.patch(
                 self._get_channel_url(channel),

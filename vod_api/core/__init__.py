@@ -4,3 +4,6 @@ from .channels import (
 from .files import (
     FileCore,
 )
+from .videos import (
+    VideoDataCore,
+)

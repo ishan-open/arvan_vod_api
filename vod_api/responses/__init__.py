@@ -7,3 +7,7 @@ from .file_res import (
     HeadFileResponse, PatchFileResponse,
     GetFileResponse, DeleteFileResponse,
 )
+from .video_res import (
+    PostVideoResponse, GetVideosResponse,
+    GetVideoResponse, DeleteVideoResponse,
+)
