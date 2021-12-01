@@ -1,24 +1,11 @@
-'id'
-'title'
-'description'
-'file_info'
-'thumbnail_time'
-'status'
-'job_status_url'
-'available'
-'convert_mode'
-'convert_info'
-'created_at'
-'updated_at'
-'completed_at'
-'parallel_convert'
-'directory_size'
-'config_url'
-'mp4_audios'
-'hls_playlist'
-'dash_playlist'
-'thumbnail_url'
-'tooltip_url'
-'audio_url'
-'player_url'
-'channel'
+from .base import DataCore
+from .channels import ChannelDataCore
+
+
+class AudioDataCore(DataCore):
+    def __init__(self, response: dict):
+        super(AudioDataCore, self).__init__(response)
+
+        self.mp4_audios = response['mp4_audios']
+        self.audio_url = response['audio_url']
+        self.channel = ChannelDataCore(response['channel'])

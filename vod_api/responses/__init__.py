@@ -11,3 +11,7 @@ from .video_res import (
     PostVideoResponse, GetVideosResponse,
     GetVideoResponse, DeleteVideoResponse,
 )
+from .audio_res import (
+    GetAudiosResponse, GetAudioResponse,
+    DeleteAudioResponse, PostAudioResponse,
+)

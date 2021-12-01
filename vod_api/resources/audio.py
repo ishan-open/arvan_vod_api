@@ -1,7 +1,10 @@
 import requests
 
 from .base import Base
-
+from ..responses import (
+    GetAudiosResponse, GetAudioResponse,
+    PostAudioResponse, DeleteAudioResponse,
+)
 
 class Audio(Base):
     """Audio"""
@@ -9,9 +12,47 @@ class Audio(Base):
     def __init__(self, api_key: str):
         super(Audio, self).__init__(api_key)
 
-    def get_audio(self):
-        """Return the specified audio."""
-        pass
+    def get_audio(
+        self,
+        audio: str,
+        secure_ip: str = None,
+        secure_expire_time: int = None
+        ):
+        """
+        Return the specified audio.
+
+        Parameters
+        ----------
+        audio : str
+            The Id of audio
+
+        secure_ip : str
+            The IP address for generate secure links for.
+            If channel is secure default is request IP
+
+        secure_expire_time : int
+            The Unix Timestamp for expire secure links.
+            * If channel is secure default is 24 hours later from now
+
+        Returns
+        -------
+        GetAudioResponse
+
+        Example
+        -------
+        >>> audio = api.audio.get_audio("some file id").data
+        >>> print(audio.id)
+        >>> print(audio.title)
+        """
+        parameters = {
+            "secure_ip": secure_ip,
+            "secure_expire_time": secure_expire_time,
+        }
+        return GetAudioResponse(requests.get(
+            self._get_audio_url(audio),
+            params=parameters,
+            headers=self.auth
+        ))
 
     def post_audio(
             self,
@@ -58,10 +99,14 @@ class Audio(Base):
 
         Returns
         -------
+        PostAudioResponse
 
         Example
         -------
-
+        >>> x = api.audio.post_audio(channel_id, "first audio", file_id="some file id")
+        >>> x.data # an object with created audio data
+        >>> x.data.id # can access to audio's data
+        >>> x.data.title
         """
         parameters = {
             "title": title,
@@ -72,20 +117,72 @@ class Audio(Base):
             "parallel_convert": parallel_convert,
             "convert_info": convert_info
         }
-        res = requests.post(self._get_audios_url(channel), json=parameters, headers=self.auth)
-        print(res.status_code)
-        try:
-            print(res.json())
-        except:
-            print(res.content)
 
-    def patch_audio(self):
-        """Update the specified audio. """
-        pass
+        return PostAudioResponse(requests.post(
+                self._get_audios_url(channel),
+                json=parameters,
+                headers=self.auth
+            ))
 
-    def delete_audio(self):
-        """Remove the specified audio. """
-        pass
+    def patch_audio(
+            self, audio: str, title: str = None, description: str = None
+        ):
+        """
+        Update the specified audio.
+
+        Parameters
+        ----------
+        audio : str
+            The Id of audio
+
+        title : str
+            Title of the audio
+
+        description : str
+            Description of the audio
+
+        Returns
+        -------
+        PostAudioResponse
+
+        Example
+        -------
+        >>> x = api.audio.patch_audio("some audio id", title="new title")
+        >>> x.data # will returns new updated data
+        >>> print(x.data.title)  
+        """
+        parameters = {
+            "title": title,
+            "description": description
+        }
+
+        return PostAudioResponse(requests.patch(
+            self._get_audio_url(audio),
+            json=parameters,
+            headers=self.auth
+        ))
+
+    def delete_audio(self, audio: str):
+        """
+        Remove the specified audio.
+        
+        Parameters
+        ----------
+        audio : str
+            The Id of audio
+
+        Returns
+        -------
+        DeleteAudioResponse
+
+        Example
+        -------
+        >>> api.audio.delete_audio("some audio id")
+        """
+        return DeleteAudioResponse(requests.delete(
+            self._get_audio_url(audio),
+            headers=self.auth
+        ))
 
     def get_audios(
                 self,
@@ -118,14 +215,21 @@ class Audio(Base):
 
         secure_expire_time : int
             The Unix Timestamp for expire secure links. * If channel is secure default is 24 hours later from now
+        
+        Returns
+        -------
+        GetAudiosResponse
+
+        Example
+        -------
+        >>> audios = api.audio.get_audios("some channel id").data
+        >>> for audio in audios: # an iterable list with audios data
+        >>> print(audio.id, audio.title)
         """
-        res = requests.get(self._get_audios_url(channel), headers=self.auth)
-        print(res.status_code)
-        try:
-            print(res.json())
-        except:
-            print(res.content)
-    
+        return GetAudiosResponse(requests.get(
+                self._get_audios_url(channel), headers=self.auth
+            ))
+
     def _get_audios_url(self, channel_id: str) -> str:
         # https://napi.arvancloud.com/vod/2.0/channels/{channel}/audios
         return f"{self.base_url}/channels/{channel_id}/audios"
