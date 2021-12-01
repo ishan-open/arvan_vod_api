@@ -76,7 +76,7 @@ class Video(Base):
             video: str,
             secure_ip: str = None,
             secure_expire_time: str = None
-        ):
+        ) -> GetVideoResponse:
         """
         Return the specified video. 
 
@@ -249,7 +249,7 @@ class Video(Base):
                 headers=self.auth
             ))
 
-    def delete_video(self, video: str):
+    def delete_video(self, video: str) -> DeleteVideoResponse:
         """
         Remove the specified video. 
 

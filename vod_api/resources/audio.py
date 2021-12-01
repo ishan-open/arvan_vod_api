@@ -17,7 +17,7 @@ class Audio(Base):
         audio: str,
         secure_ip: str = None,
         secure_expire_time: int = None
-        ):
+        ) -> GetAudioResponse:
         """
         Return the specified audio.
 
@@ -64,7 +64,7 @@ class Audio(Base):
             convert_mode: str = "auto",
             parallel_convert: bool = False,
             convert_info: list = None
-        ):
+        ) -> PostAudioResponse:
         """
         Store a newly created audio.
 
@@ -126,7 +126,7 @@ class Audio(Base):
 
     def patch_audio(
             self, audio: str, title: str = None, description: str = None
-        ):
+        ) -> PostAudioResponse:
         """
         Update the specified audio.
 
@@ -162,7 +162,7 @@ class Audio(Base):
             headers=self.auth
         ))
 
-    def delete_audio(self, audio: str):
+    def delete_audio(self, audio: str) -> DeleteAudioResponse:
         """
         Remove the specified audio.
         
@@ -192,7 +192,7 @@ class Audio(Base):
                 per_page: int = None,
                 secure_ip: str = None,
                 secure_expire_time: int = None
-            ):
+            ) -> GetAudiosResponse:
         """
         Return all channel's audios.
 
@@ -226,8 +226,17 @@ class Audio(Base):
         >>> for audio in audios: # an iterable list with audios data
         >>> print(audio.id, audio.title)
         """
+        parameters = {
+            "filter": filter,
+            "page": page,
+            "per_page": per_page,
+            "secure_ip": secure_ip,
+            "secure_expire_time": secure_expire_time,
+        }
         return GetAudiosResponse(requests.get(
-                self._get_audios_url(channel), headers=self.auth
+                self._get_audios_url(channel),
+                params=parameters,
+                headers=self.auth
             ))
 
     def _get_audios_url(self, channel_id: str) -> str:

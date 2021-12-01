@@ -15,3 +15,7 @@ from .audio_res import (
     GetAudiosResponse, GetAudioResponse,
     DeleteAudioResponse, PostAudioResponse,
 )
+from .audio_track_res import (
+    GetAudioTrackResponse, GetAudioTracksResponse,
+    PostAudioTrackResponse, DeleteAudioTrackResponse,
+)

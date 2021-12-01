@@ -13,3 +13,6 @@ from .videos import (
 from .audios import (
     AudioDataCore
 )
+from .audio_tracks import (
+    AudioTrackDataCore,
+)

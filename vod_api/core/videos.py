@@ -1,7 +1,8 @@
 from .channels import ChannelDataCore
+from .base import DataCore
 
 
-class VideoDataCore:
+class VideoDataCore(DataCore):
     def __init__(self, response: dict):
         super(VideoDataCore, self).__init__(response)
 
