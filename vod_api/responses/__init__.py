@@ -23,3 +23,7 @@ from .watermark_res import (
     GetWatermarkResponse, GetWatermarksResponse,
     PostWatermarkResponse, DeleteWatermarkResponse,
 )
+from .subtitle_res import (
+    GetSubtitleResponse, GetSubtitlesResponse,
+    PostSubtitleResponse, DeleteSubtitleResponse,
+)

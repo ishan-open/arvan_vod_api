@@ -19,3 +19,6 @@ from .audio_tracks import (
 from .watermarks import (
     WatermarkDataCore,
 )
+from .subtitles import (
+    SubtitleDataCore,
+)
