@@ -143,6 +143,27 @@ class Subtitle(Base):
                 headers=self.auth
             ))
 
+    def delete_subtitle(self, subtitle: str) -> DeleteSubtitleResponse:
+        """
+        Remove the specified subtitle. 
+
+        Parameters
+        ----------
+        sutitle : str
+            The Id of subtitle
+
+        Returns
+        -------
+        DeleteSubtitleResponse
+
+        Example
+        -------
+        >>> api.subtitle.delete_subtitle("some subtitle id")
+        """
+        return DeleteSubtitleResponse(requests.delete(
+                self._get_subtitle_url(subtitle), headers=self.auth
+            ))
+
     def _get_subtitles_url(self, video_id: str):
         # https://napi.arvancloud.com/vod/2.0/videos/{video}/subtitles
         return f"{self.base_url}/videos/{video_id}/subtitles"
