@@ -16,3 +16,6 @@ from .audios import (
 from .audio_tracks import (
     AudioTrackDataCore,
 )
+from .watermarks import (
+    WatermarkDataCore,
+)

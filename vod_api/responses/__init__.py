@@ -19,3 +19,7 @@ from .audio_track_res import (
     GetAudioTrackResponse, GetAudioTracksResponse,
     PostAudioTrackResponse, DeleteAudioTrackResponse,
 )
+from .watermark_res import (
+    GetWatermarkResponse, GetWatermarksResponse,
+    PostWatermarkResponse, DeleteWatermarkResponse,
+)
