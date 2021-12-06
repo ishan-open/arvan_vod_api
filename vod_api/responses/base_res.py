@@ -1,7 +1,11 @@
 from requests import Response
 from http import HTTPStatus
 
-from ..errors import InvalidKeyError, ArvanInternalError
+from ..errors import (
+    InvalidKeyError,
+    ArvanInternalError,
+    NotFoundError,
+)
 
 
 class BaseResponse:
@@ -26,3 +30,14 @@ class BaseResponse:
     @property
     def as_dict(self):
         return self.response.json()
+
+
+class DeleteResponse(BaseResponse):
+    def __init__(self, response: Response):
+        super(DeleteResponse, self).__init__(response)
+        if self.status_code == HTTPStatus.NOT_FOUND:
+            raise NotFoundError(self.message)
+
+    @property
+    def message(self) -> str:
+        return self.as_dict["message"]

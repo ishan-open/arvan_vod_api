@@ -155,6 +155,7 @@ class Audio(Base):
             "title": title,
             "description": description
         }
+        parameters = {key: value for key, value in parameters.items() if value is not None}
 
         return PostAudioResponse(requests.patch(
             self._get_audio_url(audio),

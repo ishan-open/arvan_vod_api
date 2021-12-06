@@ -181,6 +181,7 @@ class Watermark(Base):
             "title": title,
             "description": description
         }
+        parameters = {key: value for key, value in parameters.items() if value is not None}
 
         return PostWatermarkResponse(requests.patch(
                 self._get_watermark_url(watermark),

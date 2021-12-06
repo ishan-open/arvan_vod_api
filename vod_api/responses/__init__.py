@@ -1,3 +1,6 @@
+from .base_res import (
+    DeleteResponse,
+)
 from .channel_res import (
     GetChannelsReponse, PostChannelResponse,
     DeleteChannelResponse, GetChannelReponse,
@@ -26,4 +29,8 @@ from .watermark_res import (
 from .subtitle_res import (
     GetSubtitleResponse, GetSubtitlesResponse,
     PostSubtitleResponse, DeleteSubtitleResponse,
+)
+from .profile_res import (
+    GetProfileResponse, GetProfilesResponse,
+    PostProfileResponse,
 )
