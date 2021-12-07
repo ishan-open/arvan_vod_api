@@ -88,15 +88,3 @@ class PatchFileResponse(BaseResponse):
     @property
     def upload_offset(self) -> str:
         return self.response.headers["Upload-Offset"]
-
-
-class DeleteFileResponse(BaseResponse):
-    def __init__(self, response: Response):
-        super(DeleteFileResponse, self).__init__(response)
-        if self.status_code != HTTPStatus.OK:
-            if self.status_code == HTTPStatus.NOT_FOUND:
-                raise NotFoundError(self.message)
-
-    @property
-    def message(self):
-        return self.as_dict["message"]

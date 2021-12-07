@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetChannelsReponse, PostChannelResponse,
-    DeleteChannelResponse, GetChannelReponse,
+    DeleteResponse, GetChannelReponse,
 )
 
 
@@ -121,7 +121,7 @@ class Channel(Base):
             self._get_channels_url(),json=parameters,headers=self.auth
             ))
 
-    def delete_channel(self, channel: str) -> DeleteChannelResponse:
+    def delete_channel(self, channel: str) -> DeleteResponse:
         """
         Remove the specified channel. 
 
@@ -132,7 +132,7 @@ class Channel(Base):
 
         Returns
         -------
-        DeleteChannelResponse
+        DeleteResponse
 
         Examples
         --------
@@ -140,7 +140,7 @@ class Channel(Base):
         >>> print(x.message) # will print ' channel deleted successfully '
         """
 
-        return DeleteChannelResponse(requests.delete(
+        return DeleteResponse(requests.delete(
                 self._get_channel_url(channel), headers=self.auth
             ))
 

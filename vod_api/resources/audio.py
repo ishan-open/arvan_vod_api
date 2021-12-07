@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetAudiosResponse, GetAudioResponse,
-    PostAudioResponse, DeleteAudioResponse,
+    PostAudioResponse, DeleteResponse,
 )
 
 class Audio(Base):
@@ -163,7 +163,7 @@ class Audio(Base):
             headers=self.auth
         ))
 
-    def delete_audio(self, audio: str) -> DeleteAudioResponse:
+    def delete_audio(self, audio: str) -> DeleteResponse:
         """
         Remove the specified audio.
         
@@ -174,13 +174,13 @@ class Audio(Base):
 
         Returns
         -------
-        DeleteAudioResponse
+        DeleteResponse
 
         Example
         -------
         >>> api.audio.delete_audio("some audio id")
         """
-        return DeleteAudioResponse(requests.delete(
+        return DeleteResponse(requests.delete(
             self._get_audio_url(audio),
             headers=self.auth
         ))

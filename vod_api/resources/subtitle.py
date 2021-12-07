@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetSubtitleResponse, GetSubtitlesResponse,
-    PostSubtitleResponse, DeleteSubtitleResponse,
+    PostSubtitleResponse, DeleteResponse,
 )
 
 
@@ -143,7 +143,7 @@ class Subtitle(Base):
                 headers=self.auth
             ))
 
-    def delete_subtitle(self, subtitle: str) -> DeleteSubtitleResponse:
+    def delete_subtitle(self, subtitle: str) -> DeleteResponse:
         """
         Remove the specified subtitle. 
 
@@ -154,13 +154,13 @@ class Subtitle(Base):
 
         Returns
         -------
-        DeleteSubtitleResponse
+        DeleteResponse
 
         Example
         -------
         >>> api.subtitle.delete_subtitle("some subtitle id")
         """
-        return DeleteSubtitleResponse(requests.delete(
+        return DeleteResponse(requests.delete(
                 self._get_subtitle_url(subtitle), headers=self.auth
             ))
 

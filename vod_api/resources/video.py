@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     PostVideoResponse, GetVideosResponse,
-    GetVideoResponse, DeleteVideoResponse,
+    GetVideoResponse, DeleteResponse,
 )
 
 
@@ -249,7 +249,7 @@ class Video(Base):
                 headers=self.auth
             ))
 
-    def delete_video(self, video: str) -> DeleteVideoResponse:
+    def delete_video(self, video: str) -> DeleteResponse:
         """
         Remove the specified video. 
 
@@ -260,13 +260,13 @@ class Video(Base):
 
         Returns
         -------
-        DeleteVideoResponse
+        DeleteResponse
 
         Example
         -------
         >>> api.video.delete_video("some video id").message
         """
-        return DeleteVideoResponse(requests.delete(
+        return DeleteResponse(requests.delete(
             self._get_video_url(video), headers=self.auth
         ))
 

@@ -56,14 +56,3 @@ class PostAudioResponse(BaseResponse):
     @property
     def message(self) -> str:
         return self.as_dict["message"]
-
-
-class DeleteAudioResponse(BaseResponse):
-    def __init__(self, response: Response):
-        super(DeleteAudioResponse, self).__init__(response)
-        if self.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(self.message)
-
-    @property
-    def message(self) -> str:
-        return self.as_dict["message"]

@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetAudioTracksResponse, GetAudioTrackResponse,
-    PostAudioTrackResponse, DeleteAudioTrackResponse,
+    PostAudioTrackResponse, DeleteResponse,
 )
 
 
@@ -144,7 +144,7 @@ class AudioTrack(Base):
                 headers=self.auth
             ))
 
-    def delete_audio_track(self, audio_track: str) -> DeleteAudioTrackResponse:
+    def delete_audio_track(self, audio_track: str) -> DeleteResponse:
         """
         Remove the specified audio track. 
 
@@ -155,13 +155,13 @@ class AudioTrack(Base):
 
         Returns
         -------
-        DeleteAudioTrackResponse
+        DeleteResponse
 
         Example
         -------
         >>> 
         """
-        return DeleteAudioTrackResponse(requests.delete(
+        return DeleteResponse(requests.delete(
                 self._get_audio_track_url(audio_track), headers=self.auth
             ))
 

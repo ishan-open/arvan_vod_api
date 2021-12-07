@@ -6,7 +6,7 @@ from .base import Base
 from ..responses import (
     PostFileResponse, HeadFileResponse,
     GetFilesResponse, PatchFileResponse,
-    GetFileResponse, DeleteFileResponse
+    GetFileResponse, DeleteResponse
 )
 
 
@@ -208,7 +208,7 @@ class File(Base):
                 data=data
             ))
 
-    def delete_file(self, file: str) -> DeleteFileResponse:
+    def delete_file(self, file: str) -> DeleteResponse:
         """
         Remove the specified file. 
 
@@ -219,13 +219,13 @@ class File(Base):
 
         Returns
         -------
-        DeleteFileResponse
+        DeleteResponse
 
         Example
         -------
         >>> api.file.delete_file("some file id)
         """
-        return DeleteFileResponse(requests.delete(
+        return DeleteResponse(requests.delete(
                 self._get_file_url(file), headers=self.auth
             ))
 

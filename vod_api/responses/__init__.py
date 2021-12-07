@@ -3,32 +3,32 @@ from .base_res import (
 )
 from .channel_res import (
     GetChannelsReponse, PostChannelResponse,
-    DeleteChannelResponse, GetChannelReponse,
+    GetChannelReponse,
 )
 from .file_res import (
     PostFileResponse, GetFilesResponse,
     HeadFileResponse, PatchFileResponse,
-    GetFileResponse, DeleteFileResponse,
+    GetFileResponse,
 )
 from .video_res import (
     PostVideoResponse, GetVideosResponse,
-    GetVideoResponse, DeleteVideoResponse,
+    GetVideoResponse,
 )
 from .audio_res import (
     GetAudiosResponse, GetAudioResponse,
-    DeleteAudioResponse, PostAudioResponse,
+    PostAudioResponse,
 )
 from .audio_track_res import (
     GetAudioTrackResponse, GetAudioTracksResponse,
-    PostAudioTrackResponse, DeleteAudioTrackResponse,
+    PostAudioTrackResponse,
 )
 from .watermark_res import (
     GetWatermarkResponse, GetWatermarksResponse,
-    PostWatermarkResponse, DeleteWatermarkResponse,
+    PostWatermarkResponse,
 )
 from .subtitle_res import (
     GetSubtitleResponse, GetSubtitlesResponse,
-    PostSubtitleResponse, DeleteSubtitleResponse,
+    PostSubtitleResponse,
 )
 from .profile_res import (
     GetProfileResponse, GetProfilesResponse,

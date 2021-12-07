@@ -3,7 +3,7 @@ import requests
 from .base import Base
 from ..responses import (
     GetWatermarksResponse, PostWatermarkResponse,
-    GetWatermarkResponse, DeleteWatermarkResponse,
+    GetWatermarkResponse, DeleteResponse,
 )
 
 class Watermark(Base):
@@ -189,7 +189,7 @@ class Watermark(Base):
                 headers=self.auth
             ))
 
-    def delete_watermark(self, watermark: str) -> DeleteWatermarkResponse:
+    def delete_watermark(self, watermark: str) -> DeleteResponse:
         """
         Remove the specified watermark.
         
@@ -200,14 +200,14 @@ class Watermark(Base):
 
         Returns
         -------
-        DeleteWatermarkResponse        
+        DeleteResponse        
 
         Example
         -------
         >>> x = api.watermark.delete_watermark(watermark_id)
         >>> print(x.message)
         """
-        return DeleteWatermarkResponse(requests.delete(
+        return DeleteResponse(requests.delete(
                 self._get_watermark_url(watermark),
                 headers=self.auth
             ))
