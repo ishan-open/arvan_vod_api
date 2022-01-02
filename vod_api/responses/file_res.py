@@ -2,54 +2,35 @@ from http import HTTPStatus
 from requests import Response
 from typing import List
 
-from .base_res import BaseResponse
-from ..errors import (
-    InvalidParameterError, NotFoundError,
-    InvalidOffsetError,
+from .base_res import (
+    BaseResponse, GetItemsResponse,
+    GetResponse, PostResponse,
 )
-from ..core import (
-    FileCore, MetaCore
-)
+from ..errors import NotFoundError, InvalidOffsetError
+from ..core import FileCore
 
 
-class GetFilesResponse(BaseResponse):
-    def __init__(self, response: Response):
-        super(GetFilesResponse, self).__init__(response)
-
+class GetFilesResponse(GetItemsResponse):
     @property
     def data(self) -> List[FileCore]:
         return [FileCore(file) for file in self.as_dict["data"]]
 
-    @property
-    def links(self) -> dict:
-        return self.as_dict["links"]
 
-    @property
-    def meta(self) -> MetaCore:
-        return self.as_dict["meta"]
-
-
-class GetFileResponse(BaseResponse):
-    def __init__(self, response: Response):
-        super(GetFileResponse, self).__init__(response)
-        if self.status_code != HTTPStatus.OK:
-            if self.status_code == HTTPStatus.NOT_FOUND:
-                raise NotFoundError("Invalid file id")
-
+class GetFileResponse(GetResponse):
     @property
     def data(self) -> FileCore:
         return FileCore(self.as_dict["data"])
 
 
-class PostFileResponse(BaseResponse):
+class PostFileResponse(PostResponse):
     def __init__(self, response: Response):
         super(PostFileResponse, self).__init__(response)
-        if self.status_code != HTTPStatus.CREATED:
-            if self.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
-                raise InvalidParameterError(self.as_dict["errors"])
-        
         self.created_file_location = self.response.headers["location"]
         self.created_file_id = self.file_location.rsplit("/")[-1]
+
+    @property
+    def data(self):
+        return self.as_dict.get("data")
 
     @property
     def file_id(self) -> str:
