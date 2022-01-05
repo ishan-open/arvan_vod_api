@@ -6,7 +6,7 @@ from .base_res import (
     BaseResponse, GetItemsResponse,
     GetResponse, PostResponse,
 )
-from ..errors import NotFoundError, InvalidOffsetError
+from ..errors import NotFoundError, InvalidOffsetError, InvalidParameterError
 from ..core import FileCore
 
 
@@ -49,6 +49,10 @@ class HeadFileResponse(BaseResponse):
                 raise NotFoundError("ChannelId or FileId is Invalid!")
 
     @property
+    def data(self):
+        return self.response.get("data")
+
+    @property
     def upload_length(self) -> str:
         return self.response.headers["Upload-Length"]
 
@@ -65,6 +69,12 @@ class PatchFileResponse(BaseResponse):
                 raise InvalidOffsetError
             elif self.status_code == HTTPStatus.NOT_FOUND:
                 raise NotFoundError("FileId is invalid!")
+            elif self.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
+                raise InvalidParameterError(self.as_dict["errors"])
+
+    @property
+    def data(self):
+        return self.response.get("data")
 
     @property
     def upload_offset(self) -> str:

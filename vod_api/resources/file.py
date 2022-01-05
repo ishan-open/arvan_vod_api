@@ -1,6 +1,4 @@
 import requests
-import base64
-import mimetypes
 
 from .base import Base
 from ..responses import (
@@ -190,7 +188,7 @@ class File(Base):
         >>> with open(file_name, "rb") as f:
         >>>     data = f.read(1024*1024)
         >>>     while data:
-        >>>         x = api.file.upload_chunk(channel_id, file_id, data)
+        >>>         x = api.file.patch_file(channel_id, file_id, data)
         >>>         print(x.status_code, x.upload_offset)
         >>>         data = f.read(1024*1024)
         """
@@ -198,7 +196,6 @@ class File(Base):
             "tus-resumable": tus_resumable,
             "upload-offset": str(upload_offset),
             "Content-Type": content_type,
-
         }
         parameters.update(self.auth)
 
@@ -240,4 +237,3 @@ class File(Base):
     def _get_file_url(self, file_id: str):
         # https://napi.arvancloud.com/vod/2.0/files/{file}
         return f"{self.base_url}/files/{file_id}"
-
